@@ -1,6 +1,7 @@
 import java.io.*
-
 import java.util.zip.ZipEntry
+
+
 import java.util.zip.ZipOutputStream
 
 
@@ -46,7 +47,6 @@ fun renameFiles(file: File) {
 
                 zipFiles(file.nameWithoutExtension, filesToZip)
 
-
             }
 
 
@@ -65,22 +65,37 @@ fun zipFiles(zipName: String, list: MutableList<File>) {
     list.forEach {
 
 
-        try {
-            val input = File(it.path);
-            val fis = FileInputStream(input);
-            val ze = ZipEntry(input.name);
-            System.out.println("Zipping the file: " + input.getName());
-            out.putNextEntry(ze);
+//        try {
+//            val fis = FileInputStream(it);
+//            val ze = ZipEntry(it.name);
+//            System.out.println("Zipping the file: " + it.getName());
+//            out.putNextEntry(ze);
+//
+//            System.out.println("Done... Zipped the files...");
+//
+//        } catch (e: IOException) {
+//
+//        }
 
-            System.out.println("Done... Zipped the files...");
+        val fileInputStream : FileInputStream = FileInputStream(it)
+        val zipEntry : ZipEntry = ZipEntry(it.name)
+        out.putNextEntry(zipEntry)
 
-        } catch (e: IOException) {
-
+        val bytes = ByteArray(1024)
+        var lenght = fileInputStream.read(bytes)
+        System.out.println("Zipping the file: " + it.getName());
+        while (lenght >= 0){
+            out.write(bytes, 0, lenght)
+            lenght = fileInputStream.read(bytes)
         }
+        System.out.println("Done... Zipped the files...");
+
 
     }
 
+
     out.closeEntry()
+
 
     out.close()
 
